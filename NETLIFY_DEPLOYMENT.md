@@ -3,6 +3,9 @@
 ## Overview
 This guide will help you deploy your Resume Roaster application to Netlify using serverless functions.
 
+**Author**: divython  
+**Repository**: https://github.com/divython/resume-roaster
+
 ## 📋 Prerequisites
 - GitHub account
 - Netlify account (free tier is sufficient)
@@ -11,7 +14,7 @@ This guide will help you deploy your Resume Roaster application to Netlify using
 ## 🔧 Setup Steps
 
 ### 1. Prepare Your Repository
-1. Create a new GitHub repository
+1. Create a new GitHub repository or use: https://github.com/divython/resume-roaster
 2. Upload all your project files to the repository
 3. Make sure to exclude `.env` file (it's already in `.gitignore`)
 
@@ -37,7 +40,7 @@ MAX_TOKENS=1024
 ### 4. Deploy
 1. Click "Deploy site"
 2. Wait for deployment to complete
-3. Your site will be available at `https://your-site-name.netlify.app`
+3. Your site will be available at `https://divython-resume-roaster.netlify.app` (or your custom domain)
 
 ## 📁 Project Structure for Netlify
 

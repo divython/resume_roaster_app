@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """
-Netlify Deployment Helper Script
-"""
+Netlify Deployment Helper S    print("📋 Deployment Checklist")
+    print("Please ensure the following before deploying:")
+    print("1. ✅ Create GitHub repository: https://github.com/divython/resume-roaster")
+    print("2. ✅ Push all code to GitHub (except .env file)")
+    print("3. ✅ Create Netlify account")
+    print("4. ✅ Connect GitHub repository to Netlify")
+    print("5. ✅ Set environment variables in Netlify dashboard:")"""
 import os
 import sys
 import json
@@ -11,6 +16,7 @@ from pathlib import Path
 def main():
     """Main deployment preparation function."""
     print("🚀 Netlify Deployment Preparation")
+    print("GitHub: https://github.com/divython/resume-roaster")
     print("=" * 50)
     
     # Check if we're in the right directory

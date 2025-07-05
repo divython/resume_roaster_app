@@ -4,7 +4,7 @@ A fun and interactive web application that uses AI to "roast" resumes with humor
 
 ## 🌐 Live Demo
 
-**Deployed on Netlify**: [Your Live Site URL Here]
+**Deployed on Netlify**: https://divython-resume-roaster.netlify.app
 
 ## Features
 
@@ -30,13 +30,28 @@ A fun and interactive web application that uses AI to "roast" resumes with humor
 
 ## 🚀 Quick Deploy to Netlify
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/your-username/resume-roaster)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/divython/resume-roaster)
 
 ### One-Click Deployment
 1. Click the "Deploy to Netlify" button above
 2. Connect your GitHub account
-3. Set your `GROQ_API_KEY` in Netlify environment variables
-4. Deploy! 🎉
+3. Fork the repository to your account
+4. Set your `GROQ_API_KEY` in Netlify environment variables
+5. Deploy! 🎉
+
+### Manual Setup
+```bash
+# Clone the repository
+git clone https://github.com/divython/resume-roaster.git
+cd resume-roaster
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env and add your GROQ_API_KEY
+```
 
 ## 📋 Manual Deployment
 

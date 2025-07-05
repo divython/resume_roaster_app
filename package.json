@@ -1,0 +1,35 @@
+{
+  "name": "resume-roaster",
+  "version": "1.0.0",
+  "description": "AI-powered resume roasting application with humor and constructive feedback",
+  "main": "public/index.html",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "pip install -r requirements.txt",
+    "test": "python test_netlify_functions.py",
+    "deploy": "netlify deploy --prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/divython/resume-roaster.git"
+  },
+  "keywords": [
+    "resume",
+    "ai",
+    "roast",
+    "feedback",
+    "groq",
+    "netlify",
+    "serverless",
+    "python"
+  ],
+  "author": "divython",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/divython/resume-roaster/issues"
+  },
+  "homepage": "https://github.com/divython/resume-roaster#readme",
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}
