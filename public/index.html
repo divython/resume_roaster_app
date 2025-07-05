@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Roaster - Get Your Resume Roasted!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            border-radius: 20px 20px 0 0;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .resume-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            resize: vertical;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .resume-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .file-upload-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 15px;
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 15px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .file-upload:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .roast-type-selector {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .roast-type-option {
+            position: relative;
+        }
+
+        .roast-type-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .roast-type-option label {
+            display: block;
+            padding: 12px 20px;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #6c757d;
+        }
+
+        .roast-type-option input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            text-align: left;
+            border-left: 5px solid #667eea;
+            display: none;
+        }
+
+        .result-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .result-content {
+            line-height: 1.6;
+            color: #495057;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #dc3545;
+            display: none;
+        }
+
+        .success {
+            background: #d1edff;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #17a2b8;
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .netlify-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .roast-type-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Resume Roaster 🔥</h1>
+        <p class="subtitle">Paste your resume text and prepare to be roasted... constructively!</p>
+
+        <div class="netlify-note">
+            <strong>📝 Note:</strong> Due to Netlify's serverless limitations, please copy-paste your resume text instead of uploading files. This demo version works with text input only.
+        </div>
+
+        <div class="input-section">
+            <textarea 
+                id="resumeText" 
+                class="resume-textarea" 
+                placeholder="Paste your resume text here... Include your work experience, education, skills, and any other relevant information."
+                required>
+            </textarea>
+        </div>
+
+        <div class="roast-type-selector">
+            <div class="roast-type-option">
+                <input type="radio" name="roast_type" value="gentle" id="gentle">
+                <label for="gentle">😊 Gentle Roast</label>
+            </div>
+            <div class="roast-type-option">
+                <input type="radio" name="roast_type" value="standard" id="standard" checked>
+                <label for="standard">🔥 Standard Roast</label>
+            </div>
+            <div class="roast-type-option">
+                <input type="radio" name="roast_type" value="savage" id="savage">
+                <label for="savage">💀 Savage Roast</label>
+            </div>
+            <div class="roast-type-option">
+                <input type="radio" name="roast_type" value="professional" id="professional">
+                <label for="professional">💼 Professional</label>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button type="button" class="btn btn-primary" id="roastBtn">
+                🔥 Roast My Resume
+            </button>
+            <button type="button" class="btn btn-secondary" id="improveBtn">
+                💡 Get Improvement Tips
+            </button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing your resume... This might take a moment!</p>
+        </div>
+
+        <div class="error" id="errorMessage">
+            <strong>Error:</strong> <span id="errorText"></span>
+        </div>
+
+        <div class="success" id="successMessage">
+            <strong>Success:</strong> <span id="successText"></span>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('roast')">🔥 Your Roast</button>
+                <button class="tab" onclick="showTab('improve')" id="improveTab">💡 Improvements</button>
+            </div>
+            
+            <div id="roast-content" class="tab-content active">
+                <h2>🔥 Your Resume Roast</h2>
+                <div class="result-content" id="roastContent"></div>
+            </div>
+            
+            <div id="improve-content" class="tab-content">
+                <h2>💡 Improvement Suggestions</h2>
+                <div class="result-content" id="improvementContent">
+                    Click "Get Improvement Tips" to see suggestions for making your resume better!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/.netlify/functions';
+        
+        // Show/hide elements
+        function showElement(id) {
+            document.getElementById(id).style.display = 'block';
+        }
+        
+        function hideElement(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+        
+        // Show error message
+        function showError(message) {
+            document.getElementById('errorText').textContent = message;
+            showElement('errorMessage');
+            hideElement('successMessage');
+        }
+        
+        // Show success message
+        function showSuccess(message) {
+            document.getElementById('successText').textContent = message;
+            showElement('successMessage');
+            hideElement('errorMessage');
+        }
+        
+        // Hide messages
+        function hideMessages() {
+            hideElement('errorMessage');
+            hideElement('successMessage');
+        }
+        
+        // Get selected roast type
+        function getSelectedRoastType() {
+            const selected = document.querySelector('input[name="roast_type"]:checked');
+            return selected ? selected.value : 'standard';
+        }
+        
+        // Get resume text
+        function getResumeText() {
+            return document.getElementById('resumeText').value.trim();
+        }
+        
+        // Validate input
+        function validateInput() {
+            const resumeText = getResumeText();
+            if (!resumeText) {
+                showError('Please enter your resume text');
+                return false;
+            }
+            if (resumeText.length < 50) {
+                showError('Resume text is too short. Please provide more details.');
+                return false;
+            }
+            return true;
+        }
+        
+        // Show loading state
+        function showLoading() {
+            showElement('loading');
+            document.getElementById('roastBtn').disabled = true;
+            document.getElementById('improveBtn').disabled = true;
+        }
+        
+        // Hide loading state
+        function hideLoading() {
+            hideElement('loading');
+            document.getElementById('roastBtn').disabled = false;
+            document.getElementById('improveBtn').disabled = false;
+        }
+        
+        // Make API request
+        async function makeRequest(endpoint, data) {
+            const response = await fetch(`${API_BASE}/${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Request failed');
+            }
+            
+            return await response.json();
+        }
+        
+        // Handle roast button click
+        document.getElementById('roastBtn').addEventListener('click', async function() {
+            if (!validateInput()) return;
+            
+            hideMessages();
+            showLoading();
+            
+            try {
+                const data = {
+                    resume_text: getResumeText(),
+                    roast_type: getSelectedRoastType()
+                };
+                
+                const result = await makeRequest('roast', data);
+                
+                if (result.success) {
+                    document.getElementById('roastContent').textContent = result.roast;
+                    showElement('resultSection');
+                    showTab('roast');
+                    showSuccess('Your resume has been roasted!');
+                } else {
+                    showError(result.error || 'Failed to roast resume');
+                }
+            } catch (error) {
+                showError(error.message || 'An error occurred while roasting your resume');
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        // Handle improve button click
+        document.getElementById('improveBtn').addEventListener('click', async function() {
+            if (!validateInput()) return;
+            
+            hideMessages();
+            showLoading();
+            
+            try {
+                const data = {
+                    resume_text: getResumeText()
+                };
+                
+                const result = await makeRequest('improve', data);
+                
+                if (result.success) {
+                    document.getElementById('improvementContent').textContent = result.suggestions;
+                    showElement('resultSection');
+                    showTab('improve');
+                    showSuccess('Improvement suggestions generated!');
+                } else {
+                    showError(result.error || 'Failed to generate suggestions');
+                }
+            } catch (error) {
+                showError(error.message || 'An error occurred while generating suggestions');
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-content').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        // Clear messages when user starts typing
+        document.getElementById('resumeText').addEventListener('input', function() {
+            hideMessages();
+        });
+        
+        // Sample resume text for demo
+        document.addEventListener('DOMContentLoaded', function() {
+            const sampleText = `John Doe
+Email: john.doe@email.com | Phone: (555) 123-4567
+LinkedIn: linkedin.com/in/johndoe
+
+PROFESSIONAL SUMMARY
+Experienced software developer with 5+ years of experience in full-stack development. Skilled in JavaScript, Python, and React.
+
+WORK EXPERIENCE
+Software Developer | ABC Company | 2020 - Present
+• Developed and maintained web applications using React and Node.js
+• Collaborated with cross-functional teams to deliver projects on time
+• Improved application performance by 30%
+
+Junior Developer | XYZ Corp | 2018 - 2020
+• Built responsive websites using HTML, CSS, and JavaScript
+• Participated in code reviews and testing processes
+
+EDUCATION
+Bachelor of Science in Computer Science
+University of Technology | 2018
+
+SKILLS
+• Programming Languages: JavaScript, Python, Java
+• Frontend: React, Vue.js, HTML5, CSS3
+• Backend: Node.js, Express.js, Django
+• Databases: MySQL, MongoDB
+• Tools: Git, Docker, AWS`;
+            
+            document.getElementById('resumeText').placeholder = 
+                "Paste your resume text here...\n\nExample format:\n" + sampleText;
+        });
+    </script>
+</body>
+</html>
