@@ -9,11 +9,20 @@
 [functions]
   directory = "netlify/functions"
 
+# Redirect API calls to functions - with force to ensure they work
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+  force = true
 
+# Serve static files for everything else
 [[redirects]]
   from = "/*"
   to = "/index.html"

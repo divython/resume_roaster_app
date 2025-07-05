@@ -100,6 +100,22 @@ Look for these in build logs:
 - ❌ "Import errors" (check function code)
 - ❌ "Module not found" (check requirements.txt)
 
+## 🆘 Common Runtime Errors
+
+### Error: "Unexpected token '<', '<!DOCTYPE'..." 
+**Problem**: Functions returning HTML instead of JSON
+**Solutions**:
+1. ✅ **FIXED**: Updated netlify.toml redirects
+2. ✅ **FIXED**: Corrected function paths
+3. Check functions are properly deployed in Netlify dashboard
+
+### Error: "Function not found" or 404
+**Problem**: Functions not deployed or wrong paths
+**Solutions**:
+1. Verify functions appear in Netlify dashboard
+2. Check function names match file names
+3. Ensure functions directory is correct
+
 ## 🆘 If Still Failing
 
 1. **Check build logs** in Netlify dashboard

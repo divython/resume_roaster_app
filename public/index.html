@@ -371,6 +371,8 @@
             <strong>📝 Note:</strong> Due to Netlify's serverless limitations, please copy-paste your resume text instead of uploading files. This demo version works with text input only.
             <br><br>
             <strong>🔗 GitHub:</strong> <a href="https://github.com/divython/resume-roaster" target="_blank" style="color: #667eea;">View Source Code</a>
+            <br><br>
+            <strong>🧪 Debug:</strong> <button onclick="testFunctions()" style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Test Functions</button>
         </div>
 
         <div class="input-section">
@@ -519,22 +521,47 @@
             document.getElementById('improveBtn').disabled = false;
         }
         
-        // Make API request
+        // Make API request with better error handling
         async function makeRequest(endpoint, data) {
-            const response = await fetch(`${API_BASE}/${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-            
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Request failed');
+            try {
+                console.log(`Making request to: ${API_BASE}/${endpoint}`);
+                console.log('Request data:', data);
+                
+                const response = await fetch(`${API_BASE}/${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const textResponse = await response.text();
+                    console.error('Non-JSON response:', textResponse);
+                    throw new Error(`Server returned HTML instead of JSON. This usually means the function isn't deployed correctly.`);
+                }
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                console.log('Response data:', result);
+                return result;
+                
+            } catch (error) {
+                console.error('Request failed:', error);
+                if (error.message.includes('HTML instead of JSON')) {
+                    throw new Error('Function not found. Please check if your functions are deployed correctly in Netlify.');
+                }
+                throw error;
             }
-            
-            return await response.json();
         }
         
         // Handle roast button click
@@ -617,6 +644,36 @@
         document.getElementById('resumeText').addEventListener('input', function() {
             hideMessages();
         });
+        
+        // Test functions
+        async function testFunctions() {
+            console.log('Testing functions...');
+            
+            const testData = {
+                resume_text: "Software Developer with 3 years experience.",
+                roast_type: "gentle"
+            };
+            
+            try {
+                // Test roast function
+                console.log('Testing roast function...');
+                const roastResponse = await fetch('/.netlify/functions/roast_simple', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testData)
+                });
+                
+                console.log('Roast function status:', roastResponse.status);
+                const roastText = await roastResponse.text();
+                console.log('Roast function response:', roastText);
+                
+                alert(`Roast function test: ${roastResponse.status}\nResponse: ${roastText.substring(0, 100)}...`);
+                
+            } catch (error) {
+                console.error('Test failed:', error);
+                alert(`Test failed: ${error.message}`);
+            }
+        }
         
         // Sample resume text for demo
         document.addEventListener('DOMContentLoaded', function() {
