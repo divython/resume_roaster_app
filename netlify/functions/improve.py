@@ -2,14 +2,44 @@ import json
 import os
 import sys
 from pathlib import Path
+import traceback
 
 # Add the project root to Python path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from ai_service import ResumeRoaster
-from config import Config
-from file_processor import sanitize_text
+try:
+    from ai_service import ResumeRoaster
+    from config import Config
+    from file_processor import sanitize_text
+except ImportError as e:
+    # Fallback for missing imports
+    print(f"Import error: {e}")
+    
+    # Simple fallback functions
+    def sanitize_text(text):
+        return text.strip()[:8000] if text else ""
+    
+    class Config:
+        @staticmethod
+        def validate_config():
+            if not os.getenv('GROQ_API_KEY'):
+                raise ValueError("GROQ_API_KEY not found in environment variables")
+    
+    class ResumeRoaster:
+        def __init__(self):
+            from groq import Groq
+            self.client = Groq(api_key=os.getenv('GROQ_API_KEY'))
+        
+        def generate_improvement_suggestions(self, resume_text):
+            prompt = f"Provide constructive improvement suggestions for this resume: {resume_text}"
+            response = self.client.chat.completions.create(
+                messages=[{"role": "user", "content": prompt}],
+                model="llama3-8b-8192",
+                temperature=0.5,
+                max_tokens=1024
+            )
+            return response.choices[0].message.content if response.choices else "No suggestions generated"
 
 def handler(event, context):
     """Netlify function handler for improvement suggestions."""
