@@ -4,7 +4,45 @@ A fun and interactive web application that uses AI to "roast" resumes with humor
 
 ## 🌐 Live Demo
 
-**Deployed on Netlify**: https://divython-resume-roaster.netlify.app
+**Streamlit App**: https://divython-resume-roaster.streamlit.app *(Coming Soon)*
+
+## 🚀 **Quick Start**
+
+```bash
+# Choose your deployment option
+python quick_start.py
+```
+
+## 🎯 **Deployment Options**
+
+After testing various platforms, here are the best options:
+
+### **🥇 Option 1: Streamlit Cloud (RECOMMENDED)**
+```bash
+streamlit run streamlit_app.py
+```
+- ✅ **FREE hosting**
+- ✅ **Perfect for AI apps**
+- ✅ **File uploads supported**
+- ✅ **Beautiful UI**
+- ✅ **Easy GitHub deployment**
+
+### **🥈 Option 2: Docker + Railway/Render**
+```bash
+docker-compose --profile streamlit up
+```
+- ✅ **Professional deployment**
+- ✅ **Full control**
+- ✅ **Easy scaling**
+- ✅ **Both Flask & Streamlit versions**
+
+### **🥉 Option 3: Traditional Hosting**
+```bash
+python app.py
+```
+- ✅ **Original Flask version**
+- ✅ **Full feature set**
+- ✅ **Maximum flexibility**
 
 ## Features
 
